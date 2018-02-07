@@ -2,7 +2,6 @@
 package com.yahoo.searchdefinition.derived;
 
 import com.yahoo.document.DataType;
-import com.yahoo.search.query.profile.QueryProfileRegistry;
 import com.yahoo.searchdefinition.RankProfileRegistry;
 import com.yahoo.searchdefinition.Search;
 import com.yahoo.searchdefinition.SearchBuilder;
@@ -22,7 +21,7 @@ import java.io.IOException;
 public class EmptyRankProfileTestCase extends SearchDefinitionTestCase {
 
     @Test
-    public void testDeriving() {
+    public void testDeriving() throws IOException, ParseException {
         Search search = new Search("test", null);
         RankProfileRegistry rankProfileRegistry = RankProfileRegistry.createRankProfileRegistryWithBuiltinRankProfiles(search);
         SDDocumentType doc = new SDDocumentType("test");
@@ -33,8 +32,7 @@ public class EmptyRankProfileTestCase extends SearchDefinitionTestCase {
         doc.addField(field);
         doc.addField(new SDField("c", DataType.STRING));
 
-        search = SearchBuilder.buildFromRawSearch(search, rankProfileRegistry, new QueryProfileRegistry());
-        new DerivedConfiguration(search, rankProfileRegistry, new QueryProfileRegistry());
+        search = SearchBuilder.buildFromRawSearch(search, rankProfileRegistry);
+        new DerivedConfiguration(search, rankProfileRegistry);
     }
-
 }

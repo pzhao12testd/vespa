@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Replaces constant reference pseudofeatures in expressions by their constant value
+ * Replaces "features" which found in the given constants by their constant value
  *
  * @author bratseth
  */

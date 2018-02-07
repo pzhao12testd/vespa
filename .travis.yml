@@ -1,27 +1,46 @@
-# Copyright 2017 Yahoo Holdings. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root.
-sudo: required
-
-services:
-   - docker
-
-cache:
-  timeout: 900
-  directories:
-  - $HOME/.m2
-  - $HOME/.ccache
-
+before_cache:
+- sudo rm -rf $HOME/.m2/repository/com/yahoo/vespa
+- sudo rm -rf $HOME/.m2/repository/repository.xml
+- du --summarize --human-readable $HOME/.m2/repository
+- du --summarize --human-readable $HOME/.ccache
+- rm -rf $HOME/CACHE; find $TRAVIS_BUILD_DIR -name .starts | while read line; do du
+  -sh $line;         DIR=$(dirname $HOME/CACHE$line); mkdir -p $DIR; cp -r $line $DIR;
+  done
+- find $TRAVIS_BUILD_DIR -name jdeps-cache | while read line; do du -sh $line;         DIR=$(dirname
+  $HOME/CACHE$line); mkdir -p $DIR; cp -r $line $DIR; done
+- echo CACHESIZE $(du -sk $HOME/CACHE)
+before_install:
+- find $HOME/CACHE -name jdeps-cache | while read line; do du -sh $line;         DIR=$(dirname
+  ${line#$HOME/CACHE}); if [[ -d ${DIR#jdeps-cache/} ]]; then cp -r $line $DIR; fi;
+  done
+- find $HOME/CACHE -name .starts | while read line; do du -sh $line;         DIR=$(dirname
+  ${line#$HOME/CACHE}); if [[ -d ${DIR#.starts/} ]]; then cp -r $line $DIR; fi; done
+before_script:
+- find $TRAVIS_BUILD_DIR -name .starts | while read line; do rm -rf $line; done
+- find $TRAVIS_BUILD_DIR -name jdeps-cache | while read line; do rm -rf $line; done
+- find $HOME/CACHE -name jdeps-cache | while read line; do du -sh $line;         DIR=$(dirname
+  ${line#$HOME/CACHE}); if [[ -d ${DIR#jdeps-cache/} ]]; then cp -r $line $DIR; fi;
+  done
+- find $HOME/CACHE -name .starts | while read line; do du -sh $line;         DIR=$(dirname
+  ${line#$HOME/CACHE}); if [[ -d ${DIR#.starts/} ]]; then cp -r $line $DIR; fi; done
 branches:
   only:
   - master
-
-before_cache:
-  - sudo rm -rf $HOME/.m2/repository/com/yahoo/vespa
-  - sudo rm -rf $HOME/.m2/repository/repository.xml
-  - du --summarize --human-readable $HOME/.m2/repository
-  - du --summarize --human-readable $HOME/.ccache
-
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.ccache
+  - $HOME/CACHE
+  timeout: 900
 install: true
-
 language: minimal
-
-script: ./travis/travis.sh
+script:
+- touch /tmp/NOW
+- echo GIBSTUDYSTART $(date)
+- ./travis/travis.sh
+- echo GIBSTUDYEND $(date)
+- cd $TRAVIS_BUILD_DIR
+- echo TESTNUM $(find . -name TEST-*.xml -newer /tmp/NOW | wc -l)
+services:
+- docker
+sudo: required
