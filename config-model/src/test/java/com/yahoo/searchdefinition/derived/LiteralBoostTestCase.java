@@ -3,7 +3,6 @@ package com.yahoo.searchdefinition.derived;
 
 import com.yahoo.config.model.application.provider.BaseDeployLogger;
 import com.yahoo.document.DataType;
-import com.yahoo.search.query.profile.QueryProfileRegistry;
 import com.yahoo.searchdefinition.RankProfile;
 import com.yahoo.searchdefinition.RankProfileRegistry;
 import com.yahoo.searchdefinition.Search;
@@ -41,7 +40,7 @@ public class LiteralBoostTestCase extends AbstractExportingTestCase {
         other.addRankSetting(new RankProfile.RankSetting("a", RankProfile.RankSetting.Type.LITERALBOOST, 333));
 
         Processing.process(search, new BaseDeployLogger(), rankProfileRegistry, new QueryProfiles());
-        DerivedConfiguration derived=new DerivedConfiguration(search, rankProfileRegistry, new QueryProfileRegistry());
+        DerivedConfiguration derived=new DerivedConfiguration(search, rankProfileRegistry);
 
         // Check attribute fields
         derived.getAttributeFields(); // TODO: assert content
@@ -71,8 +70,8 @@ public class LiteralBoostTestCase extends AbstractExportingTestCase {
         rankProfileRegistry.addRankProfile(other);
         other.addRankSetting(new RankProfile.RankSetting("a", RankProfile.RankSetting.Type.LITERALBOOST, 333));
 
-        search = SearchBuilder.buildFromRawSearch(search, rankProfileRegistry, new QueryProfileRegistry());
-        DerivedConfiguration derived = new DerivedConfiguration(search, rankProfileRegistry, new QueryProfileRegistry());
+        search = SearchBuilder.buildFromRawSearch(search, rankProfileRegistry);
+        DerivedConfiguration derived = new DerivedConfiguration(search, rankProfileRegistry);
 
         // Check il script addition
         assertIndexing(Arrays.asList("clear_state | guard { input a | tokenize normalize stem:\"SHORTEST\" | index a; }",
@@ -98,8 +97,8 @@ public class LiteralBoostTestCase extends AbstractExportingTestCase {
         field2.parseIndexingScript("{ summary | index }");
         field2.setLiteralBoost(20);
 
-        search = SearchBuilder.buildFromRawSearch(search, rankProfileRegistry, new QueryProfileRegistry());
-        new DerivedConfiguration(search, rankProfileRegistry, new QueryProfileRegistry());
+        search = SearchBuilder.buildFromRawSearch(search, rankProfileRegistry);
+        new DerivedConfiguration(search, rankProfileRegistry);
         assertIndexing(Arrays.asList("clear_state | guard { input title | tokenize normalize stem:\"SHORTEST\" | summary title | index title; }",
                                      "clear_state | guard { input body | tokenize normalize stem:\"SHORTEST\" | summary body | index body; }",
                                      "clear_state | guard { input title | tokenize | index title_literal; }",

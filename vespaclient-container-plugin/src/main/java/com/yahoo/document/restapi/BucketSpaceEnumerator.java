@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Class that based on BucketspacesConfig builds a mapping from document type to which bucket space it belongs to.
+ * TODO description
  */
 class BucketSpaceEnumerator {
 
