@@ -219,7 +219,7 @@ class OperationMapper {
     private static Optional<TypedTensorFunction> placeholderWithDefault(TensorFlowImporter.Parameters params) {
         String name = toVespaName(params.node().getInput(0));
         Tensor defaultValue = getConstantTensor(params, params.node().getInput(0));
-        params.result().largeConstant(name, defaultValue);
+        params.result().constant(name, defaultValue);
         params.result().macro(name, new RankingExpression(name, new ReferenceNode("constant(\"" + name + "\")")));
         // The default value will be provided by the macro. Users can override macro to change value.
         TypedTensorFunction output = new TypedTensorFunction(defaultValue.type(), new VariableTensor(name));
@@ -544,11 +544,7 @@ class OperationMapper {
 
     private static Optional<TypedTensorFunction> createConstant(TensorFlowImporter.Parameters params, Tensor constant) {
         String name = toVespaName(params.node().getName());
-        if (constant.type().rank() == 0 || constant.size() <= 1) {
-            params.result().smallConstant(name, constant);
-        } else {
-            params.result().largeConstant(name, constant);
-        }
+        params.result().constant(name, constant);
         TypedTensorFunction output = new TypedTensorFunction(constant.type(),
                 new TensorFunctionNode.TensorFunctionExpressionNode(
                         new ReferenceNode("constant(\"" + name + "\")")));
@@ -557,11 +553,8 @@ class OperationMapper {
 
     private static Tensor getConstantTensor(TensorFlowImporter.Parameters params, String name) {
         String vespaName = toVespaName(name);
-        if (params.result().smallConstants().containsKey(vespaName)) {
-            return params.result().smallConstants().get(vespaName);
-        }
-        if (params.result().largeConstants().containsKey(vespaName)) {
-            return params.result().largeConstants().get(vespaName);
+        if (params.result().constants().containsKey(vespaName)) {
+            return params.result().constants().get(vespaName);
         }
         Session.Runner fetched = params.model().session().runner().fetch(name);
         List<org.tensorflow.Tensor<?>> importedTensors = fetched.run();

@@ -11,7 +11,7 @@ import org.antlr.runtime.RecognitionException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author Simon Thoresen Hult
+ * @author <a href="mailto:simon@yahoo-inc.com">Simon Thoresen Hult</a>
  */
 public abstract class Predicate implements Cloneable {
 

@@ -111,25 +111,10 @@ public class FilesApplicationFile extends ApplicationFile {
             file.getParentFile().mkdirs();
         }
         try {
-            String status = file.exists() ? ApplicationFile.ContentStatusChanged : ApplicationFile.ContentStatusNew;
             String data = com.yahoo.io.IOUtils.readAll(input);
+            String status = file.exists() ? ApplicationFile.ContentStatusChanged : ApplicationFile.ContentStatusNew;
             IOUtils.writeFile(file, data, false);
             writeMetaFile(data, status);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return this;
-    }
-
-    @Override
-    public ApplicationFile appendFile(String value) {
-        if (file.getParentFile() != null) {
-            file.getParentFile().mkdirs();
-        }
-        try {
-            String status = file.exists() ? ApplicationFile.ContentStatusChanged : ApplicationFile.ContentStatusNew;
-            IOUtils.writeFile(file, value, true);
-            writeMetaFile(value, status);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
