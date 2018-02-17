@@ -92,9 +92,7 @@ public class StreamingSearchCluster extends SearchCluster implements
     }
     private void deriveSingleSearchDefinition(com.yahoo.searchdefinition.Search localSearch,
                                               List<com.yahoo.searchdefinition.Search> globalSearches) {
-        this.sdConfig = new DerivedConfiguration(localSearch, globalSearches, deployLogger(),
-                                                 getRoot().getDeployState().rankProfileRegistry(),
-                                                 getRoot().getDeployState().getQueryProfiles().getRegistry());
+        this.sdConfig = new DerivedConfiguration(localSearch, globalSearches, deployLogger(), getRoot().getDeployState().rankProfileRegistry());
     }
     @Override
     public DerivedConfiguration getSdConfig() {

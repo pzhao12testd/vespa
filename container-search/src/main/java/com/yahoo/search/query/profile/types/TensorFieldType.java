@@ -21,8 +21,7 @@ public class TensorFieldType extends FieldType {
     }
 
     /** Returns information about the type of tensor this will hold */
-    @Override
-    public TensorType asTensorType() { return type; }
+    public TensorType type() { return type; }
 
     @Override
     public Class getValueClass() { return Tensor.class; }

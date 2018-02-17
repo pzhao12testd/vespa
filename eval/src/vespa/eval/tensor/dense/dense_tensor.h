@@ -19,6 +19,7 @@ class DenseTensor : public DenseTensorView
 public:
     typedef std::unique_ptr<DenseTensor> UP;
     using Cells = std::vector<double>;
+    using CellsIterator = DenseTensorCellsIterator;
 
 private:
     eval::ValueType _type;
@@ -31,6 +32,8 @@ public:
     DenseTensor(const eval::ValueType &type_in, Cells &&cells_in);
     DenseTensor(eval::ValueType &&type_in, Cells &&cells_in);
     bool operator==(const DenseTensor &rhs) const;
+    const Cells &cells() const { return _cells; }
+
 };
 
 }

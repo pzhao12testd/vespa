@@ -3,7 +3,6 @@ package com.yahoo.searchdefinition.derived;
 
 import com.yahoo.config.model.application.provider.BaseDeployLogger;
 import com.yahoo.document.DataType;
-import com.yahoo.search.query.profile.QueryProfileRegistry;
 import com.yahoo.searchdefinition.RankProfileRegistry;
 import com.yahoo.searchdefinition.Search;
 import com.yahoo.searchdefinition.SearchDefinitionTestCase;
@@ -21,7 +20,9 @@ import static org.junit.Assert.assertFalse;
  */
 public class TypeConversionTestCase extends SearchDefinitionTestCase {
 
-    /** Tests that exact-string stuff is not spilled over to the default index */
+    /**
+     * Tests that exact-string stuff is not spilled over to the default index
+     */
     @Test
     public void testExactStringToStringTypeConversion() {
         Search search = new Search("test", null);
@@ -33,7 +34,7 @@ public class TypeConversionTestCase extends SearchDefinitionTestCase {
         document.addField(a);
 
         Processing.process(search, new BaseDeployLogger(), rankProfileRegistry, new QueryProfiles());
-        DerivedConfiguration derived = new DerivedConfiguration(search, rankProfileRegistry, new QueryProfileRegistry());
+        DerivedConfiguration derived = new DerivedConfiguration(search, rankProfileRegistry);
         IndexInfo indexInfo = derived.getIndexInfo();
         assertFalse(indexInfo.hasCommand("default", "compact-to-term"));
     }

@@ -4,7 +4,6 @@ package com.yahoo.searchdefinition.derived;
 import com.google.common.collect.ImmutableList;
 import com.yahoo.collections.Pair;
 import com.yahoo.compress.Compressor;
-import com.yahoo.search.query.profile.QueryProfileRegistry;
 import com.yahoo.searchdefinition.document.RankType;
 import com.yahoo.searchdefinition.RankProfile;
 import com.yahoo.searchlib.rankingexpression.ExpressionFunction;
@@ -47,9 +46,9 @@ public class RawRankProfile implements RankProfilesConfig.Producer {
     /**
      * Creates a raw rank profile from the given rank profile
      */
-    public RawRankProfile(RankProfile rankProfile, QueryProfileRegistry queryProfiles, AttributeFields attributeFields) {
+    public RawRankProfile(RankProfile rankProfile, AttributeFields attributeFields) {
         this.name = rankProfile.getName();
-        compressedProperties = compress(removePartFromKeys(new Deriver(rankProfile, queryProfiles, attributeFields).derive()));
+        compressedProperties = compress(removePartFromKeys(new Deriver(rankProfile, attributeFields).derive()));
     }
     
     private List<Pair<String, String>> removePartFromKeys(Map<String, String> map) {
@@ -154,8 +153,8 @@ public class RawRankProfile implements RankProfilesConfig.Producer {
         /**
          * Creates a raw rank profile from the given rank profile
          */
-        public Deriver(RankProfile rankProfile, QueryProfileRegistry queryProfiles, AttributeFields attributeFields) {
-            this.rankProfile = rankProfile.compile(queryProfiles);
+        public Deriver(RankProfile rankProfile, AttributeFields attributeFields) {
+            this.rankProfile = rankProfile.compile();
             deriveRankingFeatures(this.rankProfile);
             deriveRankTypeSetting(this.rankProfile, attributeFields);
             deriveFilterFields(this.rankProfile);

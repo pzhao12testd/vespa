@@ -25,12 +25,12 @@ void
 checkCellsSize(const DenseTensor &arg)
 {
     auto cellsSize = calcCellsSize(arg.fast_type());
-    if (arg.cellsRef().size() != cellsSize) {
+    if (arg.cells().size() != cellsSize) {
         throw IllegalStateException(make_string("Wrong cell size, "
                                                 "expected=%zu, "
                                                 "actual=%zu",
                                                 cellsSize,
-                                                arg.cellsRef().size()));
+                                                arg.cells().size()));
     }
 }
 
